@@ -1,4 +1,4 @@
-package com.mediatheque.mediatheque.Controller.config;
+package com.mediatheque.mediatheque.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

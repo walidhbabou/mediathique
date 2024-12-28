@@ -1,16 +1,21 @@
 package com.mediatheque.mediatheque.Entity;
 
+import com.mediatheque.mediatheque.model.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,11 +25,9 @@ public class User implements Serializable {
     @Column(name = "id_user")
     private Long id;
 
-    private String firstname;
+    private String username;
 
     private String lastname;
-
-
 
     private String email;
 
@@ -33,6 +36,10 @@ public class User implements Serializable {
     @Column(name = "status")
     private String status;
 
-    @Embedded
-    private Role role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Collection<Role> roles=new ArrayList<>();
+
+
+
 }
