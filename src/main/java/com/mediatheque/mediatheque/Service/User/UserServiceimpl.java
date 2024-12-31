@@ -16,17 +16,16 @@ public class UserServiceimpl implements UserService {
     private final UserRepository userRepo;
 
     @Override
-    public User addUser(String username, String lastname, String email, String password, String status) {
+    public User addUser(String email, String lastename, String password, Role role, String username) {
         Collection<Role> roles = new ArrayList<>();
-        roles.add(Role.USER); // Assurez-vous que `Role.USER` est défini dans votre projet.
+        roles.add(Role.USER);
 
         User user = User.builder()
                 .username(username)
-                .lastname(lastname)
+                .lastname(lastename)
                 .email(email)
                 .password(password)
-                .status(status)
-                .roles(roles) // Vérifiez que `typeUsers` est un champ de `User`.
+                .role(role)
                 .build();
 
         return userRepo.save(user);

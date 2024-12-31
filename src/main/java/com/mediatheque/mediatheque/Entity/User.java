@@ -33,13 +33,16 @@ public class User implements Serializable {
 
     private String password;
 
-    @Column(name = "status")
-    private String status;
-
-    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Collection<Role> roles=new ArrayList<>();
+    private Role role;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Lecteur lecteur;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Employe employe;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Admin admin;
 
 }

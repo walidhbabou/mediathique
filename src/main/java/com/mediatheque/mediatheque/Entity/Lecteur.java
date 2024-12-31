@@ -14,7 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 public class Lecteur {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//auto increment;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lecteur_id")
     private Long lecteur_id;
 
