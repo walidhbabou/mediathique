@@ -1,6 +1,6 @@
 package com.mediatheque.mediatheque.Dto;
 
-import com.mediatheque.mediatheque.Entity.Role;
+import com.mediatheque.mediatheque.model.Role;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
