@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
@@ -25,56 +26,82 @@ public class SecController {
     private AcountServiceimpl userService;
     private PasswordEncoder passwordEncoder;
 //    private CartService cartService;
-    @PostMapping("/login")
-    public Map<String, String> login(UserLoginRequest userLoginRequest){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.email(), userLoginRequest.password()));
-        Instant instant = Instant.now();
-        String scope = authentication.getAuthorities().stream().map(a->a.getAuthority()).collect(Collectors.joining(" "));
-        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-                .issuedAt(instant.plus(10, ChronoUnit.MINUTES))
-                .subject(userLoginRequest.email())
-                .claim("scope", scope)
-                .build();
+@PostMapping("/login")
+public Map<String, String> login(@RequestBody UserLoginRequest userLoginRequest) {
+    // Authentifie l'utilisateur
+    Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(userLoginRequest.email(), userLoginRequest.password())
+    );
 
-        JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(
-                JwsHeader.with(MacAlgorithm.HS256).build(),
-                jwtClaimsSet
-        );
-        String jwt = jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
-        return Map.of("accessToken", jwt);
-    }
+    // Récupère le rôle de l'utilisateur
+    String role = authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .findFirst()
+            .orElse("USER");
+
+    // Génère un token JWT
+    Instant instant = Instant.now();
+    JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+            .issuedAt(instant)
+            .expiresAt(instant.plus(10, ChronoUnit.MINUTES)) // Token valide pendant 10 minutes
+            .subject(userLoginRequest.email())
+            .claim("scope", role)
+            .build();
+    System.out.println(role);
+
+    JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(
+            JwsHeader.with(MacAlgorithm.HS256).build(),
+            jwtClaimsSet
+    );
+    System.out.println("Email: " + userLoginRequest.email());
+    System.out.println("Password: " + userLoginRequest.password());
+    System.out.println("Role: " + role);
+    String jwt = jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+    return Map.of("accessToken", jwt, "role", role);
+}
     @PostMapping("/signup")
     public Map<String, String> signup(@RequestBody UserRegisterRequest userRegisterRequest) {
-        if (userRegisterRequest.email() == null || userRegisterRequest.password().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be null or empty");
-        }
+        try {
+            System.out.println("Signup request received: " + userRegisterRequest);
 
-        User user = userService.addNewUser(
-                userRegisterRequest.email(),
-                userRegisterRequest.lastname(),
-                userRegisterRequest.password(),
-                userRegisterRequest.role(),
-                userRegisterRequest.username()
-        );
+            if (userRegisterRequest.email() == null || userRegisterRequest.password().isEmpty()) {
+                System.out.println("Email or password is null or empty");
+                throw new IllegalArgumentException("Password cannot be null or empty");
+            }
 
-        if (user != null) {
-            Instant instant = Instant.now();
-
-            JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-                    .issuedAt(instant.plus(10, ChronoUnit.MINUTES))
-                    .subject(userRegisterRequest.username())
-                    .claim("scope", user.getRole().name())
-                    .build();
-
-            JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(
-                    JwsHeader.with(MacAlgorithm.HS256).build(),
-                    jwtClaimsSet
+            System.out.println("Attempting to add new user...");
+            User user = userService.addNewUser(
+                    userRegisterRequest.email(),
+                    userRegisterRequest.lastname(),
+                    userRegisterRequest.password(),
+                    userRegisterRequest.role(),
+                    userRegisterRequest.username()
             );
-            String jwt = jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
-            return Map.of("accessToken", jwt);
+
+            if (user != null) {
+                System.out.println("User successfully added: " + user);
+
+                Instant instant = Instant.now();
+
+                JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+                        .issuedAt(instant.plus(10, ChronoUnit.MINUTES))
+                        .subject(userRegisterRequest.username())
+                        .claim("scope", user.getRole().name())
+                        .build();
+
+                JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(
+                        JwsHeader.with(MacAlgorithm.HS256).build(),
+                        jwtClaimsSet
+                );
+                String jwt = jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+                return Map.of("accessToken", jwt);
+            } else {
+                System.out.println("Failed to add user");
+            }
+        } catch (Exception e) {
+            System.out.println("Error during signup: " + e.getMessage());
+            e.printStackTrace();
         }
         return Map.of("accessToken", null);
     }
-
-
 }

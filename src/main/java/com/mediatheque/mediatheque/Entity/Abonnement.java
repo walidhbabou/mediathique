@@ -30,7 +30,7 @@ public class Abonnement {
     private Long solde;
 
     @OneToOne
-    @JoinColumn(name = "lecteur_id") // Nom de la colonne de la clé étrangère dans la table Lecteur
+    @JoinColumn(name = "lecteur_id")
     private Lecteur lecteur;
 
 

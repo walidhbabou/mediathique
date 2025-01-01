@@ -3,6 +3,8 @@ package com.mediatheque.mediatheque.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Data
 @Getter
 @Setter
@@ -19,5 +21,11 @@ public class Admin  {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "id=" + id +
+                '}';
+    }
 }
 

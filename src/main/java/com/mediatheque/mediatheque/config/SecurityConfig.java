@@ -52,12 +52,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(ar -> ar
                         .requestMatchers("/auth/**").authenticated()
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/signup").permitAll()
+                        .requestMatchers("/dashboard-admin").hasRole("ADMIN")
+                        .requestMatchers("/dashboard-lecteur").hasRole("LECTEUR")
+                        .requestMatchers("/dashboard-employe").hasRole("EMPLOYEE")
+                        .anyRequest().denyAll()
                 )
                 .oauth2ResourceServer(oa -> oa.jwt(Customizer.withDefaults()))
                 .build();
     }
-
     @Bean
     public JwtEncoder jwtEncoder() {
         return new NimbusJwtEncoder(new ImmutableSecret<>(secretKey.getBytes()));
@@ -76,4 +79,5 @@ public class SecurityConfig {
         daoAuthenticationProvider.setUserDetailsService(userDetailServicesImpl);
         return new ProviderManager(daoAuthenticationProvider);
     }
+
 }
