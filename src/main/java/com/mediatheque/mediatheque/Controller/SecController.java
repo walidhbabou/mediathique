@@ -20,12 +20,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
+
 public class SecController {
     private AuthenticationManager authenticationManager;
     private JwtEncoder jwtEncoder;
     private AcountServiceimpl userService;
     private PasswordEncoder passwordEncoder;
-//    private CartService cartService;
+
 @PostMapping("/login")
 public Map<String, String> login(@RequestBody UserLoginRequest userLoginRequest) {
     // Authentifie l'utilisateur

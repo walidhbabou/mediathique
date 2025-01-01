@@ -50,17 +50,25 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(ar -> ar
+                        // Endpoints publics
+                        .requestMatchers("/login", "/signup", "/public/**").permitAll()
+                        .requestMatchers("/Mediatheque/Document/**").permitAll() // Autoriser l'accès sans authentification
+                        .requestMatchers("/Mediatheque/abo/**").permitAll()
+                        // Endpoints spécifiques aux rôles
+                        .requestMatchers("/dashboard-admin/**").hasRole("ADMIN")
+                        .requestMatchers("/dashboard-lecteur/**").hasRole("LECTEUR")
+                        .requestMatchers("/dashboard-employe/**").hasRole("EMPLOYEE")
+
+                        // Endpoints nécessitant une authentification simple
                         .requestMatchers("/auth/**").authenticated()
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/signup").permitAll()
-                        .requestMatchers("/dashboard-admin").hasRole("ADMIN")
-                        .requestMatchers("/dashboard-lecteur").hasRole("LECTEUR")
-                        .requestMatchers("/dashboard-employe").hasRole("EMPLOYEE")
+
+                        // Tous les autres endpoints sont interdits
                         .anyRequest().denyAll()
                 )
                 .oauth2ResourceServer(oa -> oa.jwt(Customizer.withDefaults()))
                 .build();
     }
+
     @Bean
     public JwtEncoder jwtEncoder() {
         return new NimbusJwtEncoder(new ImmutableSecret<>(secretKey.getBytes()));
