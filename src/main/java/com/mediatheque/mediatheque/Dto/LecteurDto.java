@@ -5,11 +5,15 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Data
 @Getter
 @Setter
 
 public class LecteurDto {
-    private Long lecteur_id;
+    private Long lecteurId;
     private User user;
+    private List<AbonnementDto> abonnements; // Include the list of abonnements
+
 }

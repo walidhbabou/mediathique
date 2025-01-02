@@ -29,9 +29,8 @@ public class Abonnement {
     @Column(name = "solde",length = 50)
     private Long solde;
 
-    @OneToOne
+    @ManyToOne // Change from @OneToOne to @ManyToOne
     @JoinColumn(name = "lecteur_id")
     private Lecteur lecteur;
-
 
 }

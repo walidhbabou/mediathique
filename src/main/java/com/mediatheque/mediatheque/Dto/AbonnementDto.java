@@ -1,21 +1,20 @@
 package com.mediatheque.mediatheque.Dto;
 
-import com.mediatheque.mediatheque.Entity.Lecteur;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
 @Data
-@Getter
-@Setter
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AbonnementDto {
     private Long abonnementId;
-    private Date date_expiration;
     private Date date_inscription;
+    private Date date_expiration;
     private Long solde;
-    private Lecteur lecteur;
 
+    private Long lecteurId;
 }
