@@ -54,7 +54,8 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/signup", "/public/**").permitAll()
                         .requestMatchers("/Mediatheque/Document/**").permitAll() // Autoriser l'accès sans authentification
                         .requestMatchers("/Mediatheque/abo/**").permitAll()
-                        // Endpoints spécifiques aux rôles
+                        .requestMatchers("/api/microfilms/**").permitAll()
+                        .requestMatchers("/Journal/**").permitAll()
                         .requestMatchers("/dashboard-admin/**").hasRole("ADMIN")
                         .requestMatchers("/dashboard-lecteur/**").hasRole("LECTEUR")
                         .requestMatchers("/dashboard-employe/**").hasRole("EMPLOYEE")

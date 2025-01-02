@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MicroFilmRepository extends JpaRepository<MicroFilm, Long> {
-    List<MicroFilm> findByDocument_Id(Long documentId); // Recherche les microfilms par ID du document
 
 }

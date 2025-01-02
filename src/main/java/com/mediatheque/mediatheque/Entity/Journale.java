@@ -20,8 +20,8 @@ public class Journale  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "journal_id")
     private Long  journal_id;
-//une entité a une relation avec une autre
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "document_id")
     private Document document;
+
 }

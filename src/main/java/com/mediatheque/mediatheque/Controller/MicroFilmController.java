@@ -8,68 +8,38 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("Mediatheque/MicroFilm")
+@RequestMapping("/api/microfilms")
 public class MicroFilmController {
 
     @Autowired
     private MicroFilmService microFilmService;
 
-    // Endpoint pour ajouter un microfilm
-    @PostMapping(path = "/add")
-    public ResponseEntity<String> addMicroFilm(@RequestBody MicroFilmDto microFilmDto) {
-        if (microFilmDto == null) {
-            return new ResponseEntity<>("MicroFilmDto is null", HttpStatus.BAD_REQUEST);
-        }
-        String result = microFilmService.addMicroFilm(microFilmDto);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
-
-    // Endpoint pour récupérer tous les microfilms
-    @GetMapping(path = "/getAll")
+    @GetMapping
     public ResponseEntity<List<MicroFilmDto>> getAllMicroFilms() {
-        List<MicroFilmDto> microFilms = microFilmService.getAllMicroFilms();
-        if (microFilms.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(microFilms, HttpStatus.OK);
+        return ResponseEntity.ok(microFilmService.getAllMicroFilms());
     }
 
-    // Endpoint pour récupérer un microfilm par ID
-    @GetMapping(path = "/get/{microId}")
-    public ResponseEntity<MicroFilmDto> getMicroFilmById(@PathVariable Long microId) {
-        MicroFilmDto microFilm = microFilmService.getMicroFilmById(microId);
-        if (microFilm == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(microFilm, HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<MicroFilmDto>> getMicroFilmById(@PathVariable Long id) {
+        return ResponseEntity.ok(microFilmService.getMicroFilmById(id));
     }
 
-    // Endpoint pour mettre à jour un microfilm
-    @PutMapping(path = "/update")
-    public ResponseEntity<String> updateMicroFilm(@RequestBody MicroFilmDto microFilmDto) {
-        if (microFilmDto == null) {
-            return new ResponseEntity<>("MicroFilmDto is null", HttpStatus.BAD_REQUEST);
-        }
-        String result = microFilmService.updateMicroFilm(microFilmDto);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @PostMapping("/add")
+    public ResponseEntity<MicroFilmDto> createMicroFilm(@RequestBody MicroFilmDto microFilmDto) {
+        return ResponseEntity.ok(microFilmService.createMicroFilm(microFilmDto));
     }
 
-    // Endpoint pour supprimer un microfilm
-    @DeleteMapping(path = "/delete/{microId}")
-    public ResponseEntity<String> deleteMicroFilm(@PathVariable Long microId) {
-        String result = microFilmService.deleteMicroFilm(microId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @DeleteMapping("/supp/{id}")
+    public ResponseEntity<Void> deleteMicroFilm(@PathVariable Long id) {
+        microFilmService.deleteMicroFilm(id);
+        return ResponseEntity.noContent().build();
     }
 
-    // Endpoint pour rechercher des microfilms par document ID
-    @GetMapping(path = "/byDocument/{documentId}")
-    public ResponseEntity<List<MicroFilmDto>> getMicroFilmsByDocumentId(@PathVariable Long documentId) {
-        List<MicroFilmDto> microFilms = microFilmService.getMicroFilmsByDocumentId(documentId);
-        if (microFilms.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(microFilms, HttpStatus.OK);
+    @PutMapping("/modifier/{id}")
+    public ResponseEntity<String> updateMicroFilm(@PathVariable Long id, @RequestBody MicroFilmDto microFilmDto) {
+        return ResponseEntity.ok(microFilmService.updateMicroFilm(id, microFilmDto));
     }
 }

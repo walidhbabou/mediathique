@@ -1,7 +1,9 @@
 package com.mediatheque.mediatheque.Service;
 
 import com.mediatheque.mediatheque.Dto.MicroFilmDto;
+import com.mediatheque.mediatheque.Entity.Document;
 import com.mediatheque.mediatheque.Entity.MicroFilm;
+import com.mediatheque.mediatheque.Repository.DocumentRepository;
 import com.mediatheque.mediatheque.Repository.MicroFilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,60 +14,79 @@ import java.util.stream.Collectors;
 
 @Service
 public class MicroFilmImp implements MicroFilmService {
+
     @Autowired
     private MicroFilmRepository microFilmRepository;
-
-    @Override
-    public String addMicroFilm(MicroFilmDto microFilmDto) {
-        MicroFilm microFilm = new MicroFilm();
-        microFilm.setDocument(microFilmDto.getDocument());
-        microFilmRepository.save(microFilm);
-        return "Microfilm ajouté avec succès";
-    }
+    @Autowired
+    private DocumentRepository documentRepository;
 
     @Override
     public List<MicroFilmDto> getAllMicroFilms() {
         List<MicroFilm> microFilms = microFilmRepository.findAll();
         return microFilms.stream()
-                .map(microFilm -> new MicroFilmDto(microFilm.getMicro_id(), microFilm.getDocument()))
+                .map(this::convertEntityToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MicroFilmDto getMicroFilmById(Long microId) {
-        Optional<MicroFilm> microFilmOptional = microFilmRepository.findById(microId);
-        return microFilmOptional.map(microFilm -> new MicroFilmDto(microFilm.getMicro_id(), microFilm.getDocument()))
-                .orElse(null);
+    public Optional<MicroFilmDto> getMicroFilmById(Long id) {
+        Optional<MicroFilm> microFilm = microFilmRepository.findById(id);
+        return microFilm.map(this::convertEntityToDto);
     }
 
     @Override
-    public String updateMicroFilm(MicroFilmDto microFilmDto) {
-        Optional<MicroFilm> existingMicroFilm = microFilmRepository.findById(microFilmDto.getMicro_id());
+    public MicroFilmDto createMicroFilm(MicroFilmDto microFilmDto) {
+        if (microFilmDto.getDocument() == null) {
+            throw new IllegalArgumentException("Document cannot be null");
+        }
+
+        Document document = documentRepository.save(microFilmDto.getDocument());
+
+        MicroFilm microFilm = new MicroFilm();
+        microFilm.setDocument(document);
+
+        microFilm = microFilmRepository.save(microFilm);
+
+        MicroFilmDto responseDto = new MicroFilmDto();
+        responseDto.setMicro_id(microFilm.getMicro_id());
+        responseDto.setDocument(microFilm.getDocument());
+
+        return responseDto;
+    }
+
+    @Override
+    public void deleteMicroFilm(Long id) {
+        Optional<MicroFilm> microFilmOptional = microFilmRepository.findById(id);
+        if (microFilmOptional.isPresent()) {
+            MicroFilm microFilm = microFilmOptional.get();
+            microFilmRepository.deleteById(id);
+            documentRepository.deleteById(microFilm.getDocument().getDocument_id());
+        } else {
+            throw new IllegalArgumentException("MicroFilm with id " + id + " not found");
+        }
+    }
+
+
+    @Override
+    public String updateMicroFilm(Long microFilmId, MicroFilmDto microFilmDto) {
+        Optional<MicroFilm> existingMicroFilm = microFilmRepository.findById(microFilmId);
+
         if (existingMicroFilm.isPresent()) {
             MicroFilm microFilm = existingMicroFilm.get();
-            microFilm.setDocument(microFilmDto.getDocument());
+            Document updatedDocument = documentRepository.save(microFilmDto.getDocument());
+            microFilm.setDocument(updatedDocument);
             microFilmRepository.save(microFilm);
-            return "Microfilm mis à jour avec succès";
+            return "MicroFilm updated successfully";
         } else {
-            return "Microfilm introuvable";
+            throw new IllegalArgumentException("MicroFilm with id " + microFilmId + " not found");
         }
     }
 
-    @Override
-    public String deleteMicroFilm(Long microId) {
-        if (microFilmRepository.existsById(microId)) {
-            microFilmRepository.deleteById(microId);
-            return "Microfilm supprimé avec succès";
-        } else {
-            return "Microfilm introuvable";
-        }
+    private MicroFilmDto convertEntityToDto(MicroFilm microFilm) {
+        return new MicroFilmDto(microFilm.getMicro_id(), microFilm.getDocument());
     }
 
-    @Override
-    public List<MicroFilmDto> getMicroFilmsByDocumentId(Long documentId) {
-        List<MicroFilm> microFilms = microFilmRepository.findByDocument_Id(documentId); // Correction ici
-        return microFilms.stream()
-                .map(microFilm -> new MicroFilmDto(microFilm.getMicro_id(), microFilm.getDocument()))
-                .collect(Collectors.toList());
+    private MicroFilm convertDtoToEntity(MicroFilmDto microFilmDto) {
+        return new MicroFilm(microFilmDto.getMicro_id(), microFilmDto.getDocument());
     }
 }

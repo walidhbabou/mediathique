@@ -39,14 +39,17 @@ public class JournaleController {
     @PutMapping("/update")
     public ResponseEntity<String> updateJournale(@RequestBody JournaleDto journaleDto) {
         if (journaleDto == null) {
-            return new ResponseEntity<>("Journaele is null", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Le journale est null", HttpStatus.BAD_REQUEST);
         }
 
+        // Appeler le service pour mettre à jour le journal
         String response = journaleService.updateJournale(journaleDto);
 
-        if (response.equals("Livre mis à jour avec succès")) {
+        // Vérifiez le résultat de la mise à jour
+        if (response.equals("Journal mis à jour avec succès.")) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }}
+    }
+}
