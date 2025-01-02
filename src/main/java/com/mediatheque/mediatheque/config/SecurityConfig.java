@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(ar -> ar
                         // Endpoints publics
                         .requestMatchers("/login", "/signup", "/public/**").permitAll()
-                        .requestMatchers("/Mediatheque/Document/**").permitAll() // Autoriser l'accès sans authentification
+                        .requestMatchers("/Mediatheque/Document/**").permitAll()
                         .requestMatchers("/Mediatheque/abo/**").permitAll()
                         .requestMatchers("/api/microfilms/**").permitAll()
                         .requestMatchers("/Journal/**").permitAll()
