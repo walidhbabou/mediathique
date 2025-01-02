@@ -15,7 +15,6 @@ public class LivreController {
 
     @Autowired
     private LivreService livreService;
-
     @PostMapping("/add")
     public ResponseEntity<String> addLivre(@RequestBody LivreDto livreDto) {
         if (livreDto == null) {
@@ -30,7 +29,6 @@ public class LivreController {
             return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/all")
     public ResponseEntity<List<LivreDto>> getLivres() {
         List<LivreDto> allLivres = livreService.getLivres();
@@ -58,5 +56,14 @@ public class LivreController {
     }
 
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<LivreDto> getLivreById(@PathVariable Long id) {
+        try {
+            LivreDto livreDto = livreService.getLivreById(id);
+            return new ResponseEntity<>(livreDto, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 }
+
