@@ -1,9 +1,13 @@
 package com.mediatheque.mediatheque.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -79,4 +83,8 @@ public class Document {
     public Long getDocument_id() {
         return document_id;
     }
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Journale> journales = new ArrayList<>();
+
 }

@@ -1,5 +1,6 @@
 package com.mediatheque.mediatheque.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
@@ -35,5 +36,7 @@ public class Emprunt {
 
     @ManyToOne
     @JoinColumn(name = "document_id")
+    @JsonBackReference
     private Document document;
+
 }
