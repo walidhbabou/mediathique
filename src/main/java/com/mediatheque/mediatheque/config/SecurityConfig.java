@@ -56,14 +56,12 @@ public class SecurityConfig {
                         .requestMatchers("/Mediatheque/abo/**").permitAll()
                         .requestMatchers("/api/microfilms/**").permitAll()
                         .requestMatchers("/Journal/**").permitAll()
+                        .requestMatchers("/api/emprunts/**").permitAll()
                         .requestMatchers("/dashboard-admin/**").hasRole("ADMIN")
                         .requestMatchers("/dashboard-lecteur/**").hasRole("LECTEUR")
                         .requestMatchers("/dashboard-employe/**").hasRole("EMPLOYEE")
-
-                        // Endpoints nécessitant une authentification simple
+                        .requestMatchers("/livre/**").permitAll()
                         .requestMatchers("/auth/**").authenticated()
-
-                        // Tous les autres endpoints sont interdits
                         .anyRequest().denyAll()
                 )
                 .oauth2ResourceServer(oa -> oa.jwt(Customizer.withDefaults()))
