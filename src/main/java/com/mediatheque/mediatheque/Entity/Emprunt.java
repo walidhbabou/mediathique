@@ -36,7 +36,7 @@ public class Emprunt {
 
     @ManyToOne
     @JoinColumn(name = "document_id")
-    @JsonBackReference
+//    @JsonBackReference
     private Document document;
 
 }
