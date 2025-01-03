@@ -23,7 +23,7 @@ public class MicroFilm {
     @Column(name = "micro_id")
     private Long micro_id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "document_id")
     private Document document;
 }

@@ -26,7 +26,7 @@ public class Livre  {
     @Column(name = "auteur")
     String auteur;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "document_id")
     private Document document;
 
