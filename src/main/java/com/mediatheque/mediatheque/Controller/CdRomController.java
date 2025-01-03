@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("Mediatheque/CdRom")
-public class cdRomController {
+public class CdRomController {
     @Autowired
     private CdRomService cdRomService;
     // Endpoint pour ajouter un CD-ROM
