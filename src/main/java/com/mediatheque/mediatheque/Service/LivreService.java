@@ -11,4 +11,5 @@ public interface LivreService {
     public List<LivreDto> getLivres();
     public String updateLivre(LivreDto livreDto);
     public LivreDto getLivreById(Long id);
+    public String deleteLivre(Long id);
 }

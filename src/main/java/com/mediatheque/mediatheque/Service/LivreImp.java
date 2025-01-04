@@ -80,5 +80,16 @@ public class LivreImp implements LivreService {
         Livre livre = livreOptional.get();
         return convertToLivreDto(livre);
     }
+    @Override
+    public String deleteLivre(Long id) {
+        Optional<Livre> livreOptional = livreRepository.findById(id);
+
+        if (!livreOptional.isPresent()) {
+            return "Livre non trouvé avec l'ID: " + id;
+        }
+
+        livreRepository.deleteById(id);
+        return "Livre supprimé avec succès";
+    }
 
 }

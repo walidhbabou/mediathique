@@ -65,6 +65,16 @@ public class LivreController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteLivre(@PathVariable Long id) {
+        String result = livreService.deleteLivre(id);
+
+        if (result.equals("Livre supprimé avec succès")) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 }
