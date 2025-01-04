@@ -56,7 +56,15 @@ public class LivreController {
             return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<LivreDto> getLivreById(@PathVariable Long id) {
+        try {
+            LivreDto livreDto = livreService.getLivreById(id);
+            return new ResponseEntity<>(livreDto, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 }

@@ -70,5 +70,15 @@ public class LivreImp implements LivreService {
 
         return "Livre mis à jour avec succès";
     }
+    @Override
+    public LivreDto getLivreById(Long id) {
+        Optional<Livre> livreOptional = livreRepository.findById(id);
+
+        if (!livreOptional.isPresent()) {
+            throw new RuntimeException("Livre non trouvé avec l'ID: " + id);
+        }
+        Livre livre = livreOptional.get();
+        return convertToLivreDto(livre);
+    }
 
 }
