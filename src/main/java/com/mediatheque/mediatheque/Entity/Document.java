@@ -84,7 +84,7 @@ public class Document {
         return document_id;
     }
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+
     private List<Journale> journales = new ArrayList<>();
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Emprunt> emprunts = new ArrayList<>();

@@ -84,6 +84,26 @@ public class JournaleImp implements JournaleService {
 
         return "Journal mis à jour avec succès.";
     }
+    @Override
+    public JournaleDto getJournaleById(Long id) {
+        return journaleRepository.findById(id)
+                .map(journale -> {
+                    JournaleDto journaleDto = new JournaleDto();
+                    journaleDto.setJournal_id(journale.getJournal_id()); // Respecte le nom journal_id
+                    journaleDto.setDocument(journale.getDocument());
+                    return journaleDto;
+                })
+                .orElseThrow(() -> new RuntimeException("Journale introuvable avec l'id: " + id));
+    }
 
+    @Override
+    public String deleteJournale(Long id) {
+        if (journaleRepository.existsById(id)) {
+            journaleRepository.deleteById(id);
+            return "Journale supprimé avec succès.";
+        } else {
+            throw new RuntimeException("Journale introuvable avec l'id: " + id);
+        }
+    }
 
 }
