@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 public class DocumentDto {
-private Long Document_id;
+private Long document_id;
 private String titre;
 private String Type;
     private double prix;

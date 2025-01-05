@@ -1,5 +1,6 @@
 package com.mediatheque.mediatheque.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mediatheque.mediatheque.model.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,7 @@ public class User implements Serializable {
     private Role role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Lecteur lecteur;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

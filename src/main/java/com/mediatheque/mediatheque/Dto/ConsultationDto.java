@@ -16,6 +16,6 @@ public class ConsultationDto {
     private Long consult_id;
     Date date_consult;
     Date date_expiration;
-    private Abonnement abonnement;
-    private Document document;
+    private Long abonnement_id; // Utilisez uniquement l'ID de l'abonnement
+    private Long document_id;
 }

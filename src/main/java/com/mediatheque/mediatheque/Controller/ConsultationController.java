@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/consultations")
+@RequestMapping("/consult")
 public class ConsultationController {
 
     @Autowired
@@ -35,8 +35,9 @@ public class ConsultationController {
         return ResponseEntity.ok(consultationService.getConsultationsByDocument(documentId));
     }
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<ConsultationDto> saveConsultation(@RequestBody ConsultationDto consultationDto) {
+        System.out.println(consultationDto);
         return ResponseEntity.ok(consultationService.saveConsultation(consultationDto));
     }
 

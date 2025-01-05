@@ -10,4 +10,6 @@ public interface DocumentService  {
     List<DocumentDto> getDocuments();
     String updateDocument(DocumentDto document);
     String deleteDocument(Long id);
+    DocumentDto getDocumentById(Long id); // Nouvelle méthode
+
 }
