@@ -6,6 +6,8 @@ import com.mediatheque.mediatheque.Entity.Document;
 import com.mediatheque.mediatheque.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -78,7 +80,7 @@ public class DocumentImp implements DocumentService {
 
 
     @Override
-    @Transactional // Assurez-vous que la méthode est exécutée dans une transaction
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public String deleteDocument(Long id) {
         Optional<Document> optionalDocument = documentRepository.findById(id);
         if (!optionalDocument.isPresent()) {
@@ -92,5 +94,24 @@ public class DocumentImp implements DocumentService {
         documentRepository.deleteById(id);
 
         return "Document supprimé avec succès";
+    }
+    @Override
+    public DocumentDto getDocumentById(Long id) {
+        Optional<Document> optionalDocument = documentRepository.findById(id);
+        if (optionalDocument.isPresent()) {
+            Document document = optionalDocument.get();
+            DocumentDto dto = new DocumentDto();
+            dto.setDocument_id(document.getDocument_id());
+            dto.setTitre(document.getTitre());
+            dto.setType(document.getType());
+            dto.setConsultable(document.getConsultable());
+            dto.setPrix(document.getPrix());
+            dto.setEmpruntable(document.getEmpruntable());
+            dto.setQuantite(document.getQuantite());
+            dto.setQuantite_disponible(document.getQuantite_disponible());
+            return dto;
+        } else {
+            throw new RuntimeException("Document non trouvé avec l'ID : " + id);
+        }
     }
 }

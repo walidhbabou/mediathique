@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class JournaleDto {
+public class  JournaleDto {
     private Long  journal_id;
     private Document document;
 }

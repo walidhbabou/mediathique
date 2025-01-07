@@ -29,11 +29,9 @@ public class LivreImp implements LivreService {
         if (document == null) {
             return "Document cannot be null";
         }
-
         Livre livre = new Livre();
         livre.setAuteur(livreDto.getAuteur());
         livre.setDocument(document);
-
         livreRepository.save(livre);
         return "Livre ajouté avec succès";
     }

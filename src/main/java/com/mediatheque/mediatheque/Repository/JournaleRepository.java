@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface JournaleRepository  extends JpaRepository<Journale,Long>{
     @Modifying
     @Query("DELETE FROM Journale m WHERE m.document.document_id = :documentId")
-    void deleteByDocumentId(@Param("documentId") Long documentId);
+    void deleteByDocumentId( Long documentId);
 }

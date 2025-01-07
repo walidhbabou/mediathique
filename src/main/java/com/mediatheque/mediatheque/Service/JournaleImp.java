@@ -10,19 +10,19 @@ import com.mediatheque.mediatheque.Repository.JournaleRepository;
 import com.mediatheque.mediatheque.Repository.LivreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @Service
 public class JournaleImp implements JournaleService {
 
     @Autowired
     private JournaleRepository journaleRepository;
+
     @Autowired
     private DocumentRepository documentRepository;
-
 
     @Override
     public String addJournale(JournaleDto journaleDto) {
@@ -30,80 +30,80 @@ public class JournaleImp implements JournaleService {
             return "Le journal ou le document est invalide.";
         }
 
-        // Sauvegarder le document reçu pour obtenir un ID
-        Document savedDocument = documentRepository.save(journaleDto.getDocument());
+        Document document = journaleDto.getDocument();
+        if (document.getDocument_id() == null) {
+            document = documentRepository.save(document); // Sauvegarder le document s'il est nouveau
+        } else {
+            Optional<Document> existingDocument = documentRepository.findById(document.getDocument_id());
+            if (!existingDocument.isPresent()) {
+                return "Document non trouvé.";
+            }
+            document = existingDocument.get(); // Utiliser le document existant
+        }
 
-        // Créer un nouvel objet Journale
         Journale journale = new Journale();
-        journale.setDocument(savedDocument);  // Associez le document sauvegardé au journal
+        journale.setDocument(document);
 
-        // Sauvegarder le journal dans la base de données
         journaleRepository.save(journale);
-
         return "Journal ajouté avec succès.";
     }
-
-
 
     @Override
     public List<JournaleDto> getJournales() {
         List<Journale> journales = journaleRepository.findAll();
         return journales.stream()
-                .map(journale -> convertToJournaleDto(journale))
+                .map(this::convertToJournaleDto)
                 .collect(Collectors.toList());
     }
+
     private JournaleDto convertToJournaleDto(Journale journale) {
         JournaleDto journaleDto = new JournaleDto();
-
-        // Utiliser l'objet journale pour accéder aux propriétés
-        journaleDto.setJournal_id(journale.getJournal_id());  // Récupérer l'ID du journale
-        journaleDto.setDocument(journale.getDocument());  // Récupérer le document associé au journale
-
+        journaleDto.setJournal_id(journale.getJournal_id());
+        journaleDto.setDocument(journale.getDocument());
         return journaleDto;
     }
 
     @Override
+    @Transactional
     public String updateJournale(JournaleDto journaleDto) {
-        // Vérifiez si le journal existe dans la base de données
         Optional<Journale> journaleOptional = journaleRepository.findById(journaleDto.getJournal_id());
         if (!journaleOptional.isPresent()) {
             return "Journal non trouvé.";
         }
+
         Journale journale = journaleOptional.get();
+        Document newDocument = journaleDto.getDocument();
 
-        Document document = journaleDto.getDocument();
-        if (document != null) {
-            // Si un document est passé, mettez à jour l'objet document associé au journal
-            document.setDocument_id(journale.getDocument().getDocument_id());  // Gardez le même ID pour la mise à jour
-            documentRepository.save(document);  // Sauvegarder le document mis à jour
+        if (newDocument != null) {
+            Document existingDocument = journale.getDocument();
+
+            // Mettre à jour les champs du document existant
+            if (existingDocument != null) {
+                existingDocument.setTitre(newDocument.getTitre());
+                existingDocument.setType(newDocument.getType());
+                existingDocument.setPrix(newDocument.getPrix());
+                existingDocument.setConsultable(newDocument.getConsultable());
+                existingDocument.setEmpruntable(newDocument.getEmpruntable());
+                existingDocument.setQuantite(newDocument.getQuantite());
+                existingDocument.setQuantite_disponible(newDocument.getQuantite_disponible());
+
+                documentRepository.save(existingDocument); // Sauvegarder les modifications
+            } else {
+                // Si le document n'existe pas, enregistrez-le
+                documentRepository.save(newDocument);
+                journale.setDocument(newDocument);
+            }
         }
-
-        journale.setDocument(document);  // Associer le document mis à jour au journal
 
         journaleRepository.save(journale);
-
         return "Journal mis à jour avec succès.";
     }
-    @Override
-    public JournaleDto getJournaleById(Long id) {
-        return journaleRepository.findById(id)
-                .map(journale -> {
-                    JournaleDto journaleDto = new JournaleDto();
-                    journaleDto.setJournal_id(journale.getJournal_id()); // Respecte le nom journal_id
-                    journaleDto.setDocument(journale.getDocument());
-                    return journaleDto;
-                })
-                .orElseThrow(() -> new RuntimeException("Journale introuvable avec l'id: " + id));
-    }
 
     @Override
-    public String deleteJournale(Long id) {
-        if (journaleRepository.existsById(id)) {
-            journaleRepository.deleteById(id);
-            return "Journale supprimé avec succès.";
-        } else {
-            throw new RuntimeException("Journale introuvable avec l'id: " + id);
-        }
+    public String deleteJournale(JournaleDto JournaleDto) {
+        journaleRepository.deleteById(JournaleDto.getJournal_id());
+        return "Supprimer vraie";
     }
+
 
 }

@@ -16,7 +16,7 @@ import java.util.Date;
 public class Consultation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//auto increment;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "consult_id")
     private Long consult_id;
 
@@ -31,13 +31,11 @@ public class Consultation {
 
 
 
-    @ManyToOne
-    //@JoinColumn(name = "abonnement_id", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "abonnement_id")
-
     private Abonnement abonnement;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "document_id")
     private Document document;
 

@@ -56,7 +56,11 @@ public class DocumentController {
         String result = documentService.updateDocument(documentDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<DocumentDto> getDocumentById(@PathVariable Long id) {
+        DocumentDto documentDto = documentService.getDocumentById(id);
+        return ResponseEntity.ok(documentDto);
+    }
     // Endpoint pour supprimer un document
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<String> deleteDocument(@PathVariable Long id) {

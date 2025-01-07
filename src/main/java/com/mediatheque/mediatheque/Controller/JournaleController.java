@@ -37,6 +37,7 @@ public class JournaleController {
         return new ResponseEntity<>(journales, HttpStatus.OK);
     }
     @PutMapping("/update")
+
     public ResponseEntity<String> updateJournale(@RequestBody JournaleDto journaleDto) {
         if (journaleDto == null) {
             return new ResponseEntity<>("Le journale est null", HttpStatus.BAD_REQUEST);
