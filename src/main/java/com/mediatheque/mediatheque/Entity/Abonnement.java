@@ -21,10 +21,10 @@ public class Abonnement {
     private Long abonnementId;
 
     @Column(name = "date_expiration")
-   private  Date date_expiration;
+   private  Date dateexpiration;
 
     @Column(name = "date_inscription")
-    private Date date_inscription;
+    private Date dateinscription;
 
     @Column(name = "solde",length = 50)
     private Long solde;

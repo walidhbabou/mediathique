@@ -22,7 +22,7 @@ public class EmpruntController {
         return ResponseEntity.ok(empruntService.createEmprunt(empruntDto));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<EmpruntDto>> getAllEmprunts() {
         return ResponseEntity.ok(empruntService.getAllEmprunts());
     }

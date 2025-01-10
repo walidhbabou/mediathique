@@ -12,9 +12,12 @@ import java.util.Date;
 @AllArgsConstructor
 public class AbonnementDto {
     private Long abonnementId;
-    private Date date_inscription;
-    private Date date_expiration;
+    private Date dateinscription;
+    private Date dateexpiration;
     private Long solde;
 
     private Long lecteurId;
+    private String lecteurName;
+    private String  lecteurlastName;
+
 }

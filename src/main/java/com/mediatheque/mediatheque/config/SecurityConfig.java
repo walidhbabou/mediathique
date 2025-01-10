@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/microfilms/**").permitAll()
                         .requestMatchers("/Journal/**").permitAll()
                         .requestMatchers("/livre/**").permitAll()
-                        .requestMatchers("/Mediathequeemprunts/**").permitAll()
+                        .requestMatchers("/api/emprunts/**").permitAll()
                         .requestMatchers("/Mediatheque/lecteur/**").permitAll()
                         .requestMatchers("/consult/**").permitAll()
                         .requestMatchers("/dashboard-admin/**").hasRole("ADMIN")

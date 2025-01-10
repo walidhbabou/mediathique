@@ -8,6 +8,7 @@ import com.mediatheque.mediatheque.Repository.LecteurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,8 +34,8 @@ public class AbonnementImpl implements AbonnementService {
 
         // Map the DTO to the entity
         Abonnement abonnement = new Abonnement();
-        abonnement.setDate_expiration(abonnementDto.getDate_expiration());
-        abonnement.setDate_inscription(abonnementDto.getDate_inscription());
+        abonnement.setDateexpiration(abonnementDto.getDateexpiration());
+        abonnement.setDateinscription(abonnementDto.getDateinscription());
         abonnement.setSolde(abonnementDto.getSolde());
         abonnement.setLecteur(lecteur); // Associate the existing lecteur
 
@@ -44,8 +45,8 @@ public class AbonnementImpl implements AbonnementService {
         // Map the saved entity back to DTO
         AbonnementDto savedAbonnementDto = new AbonnementDto();
         savedAbonnementDto.setAbonnementId(savedAbonnement.getAbonnementId());
-        savedAbonnementDto.setDate_expiration(savedAbonnement.getDate_expiration());
-        savedAbonnementDto.setDate_inscription(savedAbonnement.getDate_inscription());
+        savedAbonnementDto.setDateexpiration(savedAbonnement.getDateexpiration());
+        savedAbonnementDto.setDateinscription(savedAbonnement.getDateinscription());
         savedAbonnementDto.setSolde(savedAbonnement.getSolde());
         savedAbonnementDto.setLecteurId(savedAbonnement.getLecteur().getLecteurId());
 
@@ -57,8 +58,8 @@ public class AbonnementImpl implements AbonnementService {
         Abonnement abonnement = abonnementRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Abonnement not found"));
 
-        abonnement.setDate_inscription(abonnementDto.getDate_inscription());
-        abonnement.setDate_expiration(abonnementDto.getDate_expiration());
+        abonnement.setDateinscription(abonnementDto.getDateinscription());
+        abonnement.setDateexpiration(abonnementDto.getDateexpiration());
         abonnement.setSolde(abonnementDto.getSolde());
 
 
@@ -86,13 +87,28 @@ public class AbonnementImpl implements AbonnementService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<AbonnementDto> findAbonnementsExpiringBefore(Date date_expiration) {
+        List<Abonnement> abonnements = abonnementRepository.findByDateexpirationBefore(date_expiration);
+        return abonnements.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public AbonnementDto getAbonnementByLecteurId(Long lecteurId) {
+        Abonnement abonnement = abonnementRepository.findByLecteurLecteurId(lecteurId)
+                .orElseThrow(() -> new RuntimeException("Abonnement not found for lecteur with id: " + lecteurId));
+        return mapToDto(abonnement);
+    }
     private AbonnementDto mapToDto(Abonnement abonnement) {
         return AbonnementDto.builder()
                 .abonnementId(abonnement.getAbonnementId())
-                .date_inscription(abonnement.getDate_inscription())
-                .date_expiration(abonnement.getDate_expiration())
+                .dateinscription(abonnement.getDateinscription())
+                .dateexpiration(abonnement.getDateexpiration())
                 .solde(abonnement.getSolde())
                 .lecteurId(abonnement.getLecteur().getLecteurId())
+                .lecteurName(abonnement.getLecteur().getUser().getUsername())
+                .lecteurlastName(abonnement.getLecteur().getUser().getLastname())
                 .build();
     }
 }

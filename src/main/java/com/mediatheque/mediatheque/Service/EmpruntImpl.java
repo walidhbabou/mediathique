@@ -118,8 +118,8 @@ public class EmpruntImpl implements EmpruntService{
         if (emprunt.getAbonnement() != null) {
             Abonnement abonnementDto = new Abonnement();
             abonnementDto.setAbonnementId(emprunt.getAbonnement().getAbonnementId());
-            abonnementDto.setDate_expiration(emprunt.getAbonnement().getDate_expiration());
-            abonnementDto.setDate_inscription(emprunt.getAbonnement().getDate_inscription());
+            abonnementDto.setDateexpiration(emprunt.getAbonnement().getDateexpiration());
+            abonnementDto.setDateinscription(emprunt.getAbonnement().getDateinscription());
             abonnementDto.setSolde(emprunt.getAbonnement().getSolde());
             dto.setAbonnement(abonnementDto);
         }
