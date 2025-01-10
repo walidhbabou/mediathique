@@ -29,14 +29,14 @@ public class Emprunt {
     Date date_retour;
 
     @ManyToOne
-    //@JoinColumn(name = "abonnement_id", referencedColumnName = "id")
+
     @JoinColumn(name = "abonnement_id")
 
     private Abonnement abonnement;
 
     @ManyToOne
     @JoinColumn(name = "document_id")
-//    @JsonBackReference
+
     private Document document;
 
 }

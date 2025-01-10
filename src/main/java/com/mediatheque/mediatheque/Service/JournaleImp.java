@@ -83,7 +83,7 @@ public class JournaleImp implements JournaleService {
                 existingDocument.setType(newDocument.getType());
                 existingDocument.setPrix(newDocument.getPrix());
                 existingDocument.setConsultable(newDocument.getConsultable());
-                existingDocument.setEmpruntable(newDocument.getEmpruntable());
+
                 existingDocument.setQuantite(newDocument.getQuantite());
                 existingDocument.setQuantite_disponible(newDocument.getQuantite_disponible());
 

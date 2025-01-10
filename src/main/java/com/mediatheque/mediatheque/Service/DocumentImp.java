@@ -16,18 +16,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class DocumentImp implements DocumentService {
-     @Autowired
-     private DocumentRepository documentRepository;
-     @Autowired
-     private EmpruntRepository empruntRepository;
-     @Autowired
-     private MicroFilmRepository microFilmRepository;
-     @Autowired
-      private LivreRepository livreRepository;
-     @Autowired
-     private JournaleRepository journaleRepository;
-     @Autowired
-     private CdRomRepository cdRomRepository;
+    @Autowired
+    private DocumentRepository documentRepository;
+    @Autowired
+    private EmpruntRepository empruntRepository;
+    @Autowired
+    private MicroFilmRepository microFilmRepository;
+    @Autowired
+    private LivreRepository livreRepository;
+    @Autowired
+    private JournaleRepository journaleRepository;
+    @Autowired
+    private CdRomRepository cdRomRepository;
     @Override
     public String addDocument(DocumentDto documentDto) {
         Document document = new Document();
@@ -35,7 +35,6 @@ public class DocumentImp implements DocumentService {
         document.setType(documentDto.getType());
         document.setConsultable(documentDto.getConsultable());
         document.setPrix(documentDto.getPrix());
-        document.setEmpruntable(documentDto.getEmpruntable());
         document.setQuantite(documentDto.getQuantite());
         document.setQuantite_disponible(documentDto.getQuantite_disponible());
         documentRepository.save(document);
@@ -52,7 +51,6 @@ public class DocumentImp implements DocumentService {
             dto.setType(document.getType());
             dto.setConsultable(document.getConsultable());
             dto.setPrix(document.getPrix());
-            dto.setEmpruntable(document.getEmpruntable());
             dto.setQuantite(document.getQuantite());
             dto.setQuantite_disponible(document.getQuantite_disponible());
             return dto;
@@ -68,7 +66,6 @@ public class DocumentImp implements DocumentService {
             document.setType(documentDTO.getType());
             document.setPrix(documentDTO.getPrix());
             document.setConsultable(documentDTO.getConsultable());
-            document.setEmpruntable(documentDTO.getEmpruntable());
             document.setQuantite(documentDTO.getQuantite());
             document.setQuantite_disponible(documentDTO.getQuantite_disponible());
             documentRepository.save(document);
@@ -106,7 +103,7 @@ public class DocumentImp implements DocumentService {
             dto.setType(document.getType());
             dto.setConsultable(document.getConsultable());
             dto.setPrix(document.getPrix());
-            dto.setEmpruntable(document.getEmpruntable());
+
             dto.setQuantite(document.getQuantite());
             dto.setQuantite_disponible(document.getQuantite_disponible());
             return dto;
