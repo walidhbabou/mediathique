@@ -53,4 +53,21 @@ public class JournaleController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<JournaleDto> getJournaleById(@PathVariable Long id) {
+        try {
+            JournaleDto journaleDto = journaleService.getJournaleById(id);
+            return new ResponseEntity<>(journaleDto, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteJournale(@PathVariable Long id) {
+        try {
+            String response = journaleService.deleteJournale(id);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }}
 }

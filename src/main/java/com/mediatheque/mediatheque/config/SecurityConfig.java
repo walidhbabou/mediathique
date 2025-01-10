@@ -53,7 +53,8 @@ public class SecurityConfig {
                         // Endpoints publics
                         .requestMatchers("/login", "/signup", "/public/**").permitAll()
                         .requestMatchers("/Mediatheque/Document/**").permitAll()
-                        .requestMatchers("/Mediatheque/abo/**").permitAll()
+                        .requestMatchers("Mediatheque/abo/**").permitAll()
+                        .requestMatchers("Mediatheque/Journal/**").permitAll()
                         .requestMatchers("/api/microfilms/**").permitAll()
                         .requestMatchers("/Journal/**").permitAll()
                         .requestMatchers("/livre/**").permitAll()
