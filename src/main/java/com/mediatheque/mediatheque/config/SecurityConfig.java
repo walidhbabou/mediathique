@@ -50,11 +50,10 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(ar -> ar
-                        // Endpoints publics
                         .requestMatchers("/login", "/signup", "/public/**").permitAll()
                         .requestMatchers("/Mediatheque/Document/**").permitAll()
-                        .requestMatchers("Mediatheque/abo/**").permitAll()
-                        .requestMatchers("Mediatheque/Journal/**").permitAll()
+                        .requestMatchers("/Mediatheque/abo/**").permitAll()
+                        .requestMatchers("/Mediatheque/Journal/**").permitAll()
                         .requestMatchers("/api/microfilms/**").permitAll()
                         .requestMatchers("/Journal/**").permitAll()
                         .requestMatchers("/livre/**").permitAll()

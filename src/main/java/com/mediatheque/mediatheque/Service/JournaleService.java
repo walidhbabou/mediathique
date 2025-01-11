@@ -7,6 +7,8 @@ public interface JournaleService {
     public String addJournale(JournaleDto JournaleDto);
     public List<JournaleDto> getJournales();
     public String updateJournale(JournaleDto JournaleDto);
-    public String deleteJournale(JournaleDto JournaleDto);
+    String deleteJournaleById(Long id);
+
+    JournaleDto getJournaleById(Long id);
 }
 

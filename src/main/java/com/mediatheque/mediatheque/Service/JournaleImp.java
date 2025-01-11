@@ -8,6 +8,7 @@ import com.mediatheque.mediatheque.Entity.Livre;
 import com.mediatheque.mediatheque.Repository.DocumentRepository;
 import com.mediatheque.mediatheque.Repository.JournaleRepository;
 import com.mediatheque.mediatheque.Repository.LivreRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,10 +101,35 @@ public class JournaleImp implements JournaleService {
     }
 
     @Override
-    public String deleteJournale(JournaleDto JournaleDto) {
-        journaleRepository.deleteById(JournaleDto.getJournal_id());
-        return "Supprimer vraie";
+    public String deleteJournaleById(Long id) {
+        Optional<Journale> journaleOptional = journaleRepository.findById(id);
+        if (!journaleOptional.isPresent()) {
+            return "Journal non trouvé.";
+        }
+
+        journaleRepository.deleteById(id);
+        return "Journal supprimé avec succès.";
     }
+
+
+    @Override
+    public JournaleDto getJournaleById(Long id) {
+        // Vérification de la validité de l'identifiant
+        if (id == null) {
+            throw new IllegalArgumentException("L'identifiant ne peut pas être null.");
+        }
+
+        // Recherche du journal par son ID
+        Optional<Journale> journaleOptional = journaleRepository.findById(id);
+
+        // Si le journal n'existe pas, lever une exception
+        Journale journale = journaleOptional.orElseThrow(() ->
+                new EntityNotFoundException("Journal introuvable pour l'ID : " + id));
+
+        // Convertir l'entité Journale en DTO et retourner le résultat
+        return convertToJournaleDto(journale);
+    }
+
 
 
 }

@@ -62,12 +62,14 @@ public class JournaleController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteJournale(@PathVariable Long id) {
         try {
-            String response = journaleService.deleteJournale(id);
+            String response = journaleService.deleteJournaleById(id); // Méthode corrigée
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }}
+        }
+    }
 }
