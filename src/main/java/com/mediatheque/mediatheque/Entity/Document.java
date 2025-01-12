@@ -75,8 +75,7 @@ public class Document {
     public Long getDocument_id() {
         return document_id;
     }
-    @OneToOne(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Journale journale;
+
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Emprunt> emprunts = new ArrayList<>();
 

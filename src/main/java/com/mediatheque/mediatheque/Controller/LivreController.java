@@ -31,6 +31,7 @@ public class LivreController {
         }
     }
 
+
     @GetMapping("/all")
     public ResponseEntity<List<LivreDto>> getLivres() {
         List<LivreDto> allLivres = livreService.getLivres();

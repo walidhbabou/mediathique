@@ -1,11 +1,8 @@
 package com.mediatheque.mediatheque.Service;
 
 import com.mediatheque.mediatheque.Dto.DocumentDto;
-import com.mediatheque.mediatheque.Dto.DocumentRequest;
-import com.mediatheque.mediatheque.Dto.LivreDto;
 import com.mediatheque.mediatheque.Entity.Document;
 
-import com.mediatheque.mediatheque.Entity.Livre;
 import com.mediatheque.mediatheque.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,32 +21,17 @@ public class DocumentImp implements DocumentService {
     @Autowired
     private EmpruntRepository empruntRepository;
     @Autowired
-    private MicroFilmRepository microFilmRepository;
-    @Autowired
     private LivreRepository livreRepository;
-    @Autowired
-    private JournaleRepository journaleRepository;
-    @Autowired
-    private CdRomRepository cdRomRepository;
-    @Autowired
-    private LivreService livreService ;
+
     @Override
-    public String addDocument(DocumentRequest documentDto) {
+    public String addDocument(DocumentDto documentDto) {
         Document document = new Document();
-        document.setTitre(documentDto.getDocument().getTitre());
-        document.setType(documentDto.getDocument().getType());
-        document.setConsultable(documentDto.getDocument().getConsultable());
-        document.setPrix(documentDto.getDocument().getPrix());
-        document.setQuantite(documentDto.getDocument().getQuantite());
-        document.setQuantite_disponible(documentDto.getDocument().getQuantite_disponible());
-        System.out.println(document);
-        if(document.getType().equals("LIVRE")){
-            System.out.println("dkhal");
-            LivreDto livre=new LivreDto();
-            livre.setDocument(document);
-            livre.setAuteur(documentDto.getLivre().getAuteur());
-            livreService.addLivre(livre);
-        }
+        document.setTitre(documentDto.getTitre());
+        document.setType(documentDto.getType());
+        document.setConsultable(documentDto.getConsultable());
+        document.setPrix(documentDto.getPrix());
+        document.setQuantite(documentDto.getQuantite());
+        document.setQuantite_disponible(documentDto.getQuantite_disponible());
         documentRepository.save(document);
 
         return "Document ajouté avec succès";
@@ -97,10 +79,7 @@ public class DocumentImp implements DocumentService {
             return "Document non trouvé";
         }
         empruntRepository.deleteByDocumentId(id);
-        microFilmRepository.deleteByDocumentId(id);
         livreRepository.deleteByDocumentId(id);
-        journaleRepository.deleteByDocumentId(id);
-        cdRomRepository.deleteByDocumentId(id);
         documentRepository.deleteById(id);
 
         return "Document supprimé avec succès";
