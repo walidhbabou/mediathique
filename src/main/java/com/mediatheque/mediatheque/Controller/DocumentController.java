@@ -2,6 +2,8 @@ package com.mediatheque.mediatheque.Controller;
 
 
 import com.mediatheque.mediatheque.Dto.DocumentDto;
+import com.mediatheque.mediatheque.Dto.DocumentRequest;
+import com.mediatheque.mediatheque.Dto.LivreDto;
 import com.mediatheque.mediatheque.Repository.DocumentRepository;
 import com.mediatheque.mediatheque.Service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,12 @@ public class DocumentController {
 
     // Endpoint pour sauvegarder un document
     @PostMapping(path = "/save")
-    public ResponseEntity<String> saveDocument(@RequestBody DocumentDto documentDTO) {
-        if (documentDTO == null) {
+    public ResponseEntity<String> saveDocument(@RequestBody DocumentRequest documentDto) {
+        if (documentDto.getDocument() == null) {
             return new ResponseEntity<>("DocumentDTO is null", HttpStatus.BAD_REQUEST);
         }
 
-        String result = documentService.addDocument(documentDTO);
+        String result = documentService.addDocument(documentDto);
 
         if (result.equals("Document added successfully")) {
             return new ResponseEntity<>(result, HttpStatus.CREATED);

@@ -8,7 +8,7 @@
     public class DocumentDto {
     private Long document_id;
     private String titre;
-    private String Type;
+    private String type;
         private double prix;
         private Boolean consultable;
         private int quantite;
