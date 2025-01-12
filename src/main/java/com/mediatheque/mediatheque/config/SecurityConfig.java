@@ -57,6 +57,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/microfilms/**").permitAll()
                         .requestMatchers("/Journal/**").permitAll()
                         .requestMatchers("/livre/**").permitAll()
+                        .requestMatchers("/Mediatheque/CdRom/**").permitAll()
                         .requestMatchers("/api/emprunts/**").permitAll()
                         .requestMatchers("/Mediatheque/lecteur/**").permitAll()
                         .requestMatchers("/consult/**").permitAll()

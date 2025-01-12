@@ -21,13 +21,8 @@ public class DocumentImp implements DocumentService {
     @Autowired
     private EmpruntRepository empruntRepository;
     @Autowired
-    private MicroFilmRepository microFilmRepository;
-    @Autowired
     private LivreRepository livreRepository;
-    @Autowired
-    private JournaleRepository journaleRepository;
-    @Autowired
-    private CdRomRepository cdRomRepository;
+
     @Override
     public String addDocument(DocumentDto documentDto) {
         Document document = new Document();
@@ -84,10 +79,7 @@ public class DocumentImp implements DocumentService {
             return "Document non trouvé";
         }
         empruntRepository.deleteByDocumentId(id);
-        microFilmRepository.deleteByDocumentId(id);
         livreRepository.deleteByDocumentId(id);
-        journaleRepository.deleteByDocumentId(id);
-        cdRomRepository.deleteByDocumentId(id);
         documentRepository.deleteById(id);
 
         return "Document supprimé avec succès";

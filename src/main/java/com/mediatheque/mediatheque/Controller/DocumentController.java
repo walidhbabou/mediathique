@@ -18,7 +18,6 @@ public class DocumentController {
     @Autowired
     private DocumentService documentService;
 
-    // Endpoint pour sauvegarder un document
     @PostMapping(path = "/save")
     public ResponseEntity<String> saveDocument(@RequestBody DocumentDto documentDTO) {
         if (documentDTO == null) {
@@ -27,12 +26,14 @@ public class DocumentController {
 
         String result = documentService.addDocument(documentDTO);
 
-        if (result.equals("Document added successfully")) {
+        if (result.equals("Document ajouté avec succès")) {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
+
 
     // Endpoint pour récupérer tous les documents
     @GetMapping(path = "/getAllDocuments")
