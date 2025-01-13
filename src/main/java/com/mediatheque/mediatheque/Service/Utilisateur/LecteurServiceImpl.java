@@ -21,4 +21,9 @@ public class LecteurServiceImpl implements LecteurService {
     public List<Lecteur> getAllLecteurs() {
         return lecteurRepository.findAll();
     }
+    @Override
+    public Lecteur getLecteurById(Long id) {
+        return lecteurRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Lecteur introuvable avec l'id : " + id));
+    }
 }

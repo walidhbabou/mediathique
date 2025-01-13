@@ -39,7 +39,4 @@ public class Emprunt {
 
     private Document document;
 
-    @ManyToOne
-    @JoinColumn(name = "lecteur_id")
-    private Lecteur lecteur;
 }

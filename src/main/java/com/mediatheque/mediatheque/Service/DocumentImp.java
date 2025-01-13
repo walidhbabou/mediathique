@@ -39,17 +39,20 @@ public class DocumentImp implements DocumentService {
         document.setQuantite(documentDto.getDocument().getQuantite());
         document.setQuantite_disponible(documentDto.getDocument().getQuantite_disponible());
         System.out.println(document);
-        if(document.getType().equals("LIVRE")){
-            System.out.println("dkhal");
-            LivreDto livre=new LivreDto();
+
+        // Traitement spécifique pour les livres
+        if (document.getType().equals("LIVRE")) {
+            LivreDto livre = new LivreDto();
             livre.setDocument(document);
             livre.setAuteur(documentDto.getLivre().getAuteur());
             livreService.addLivre(livre);
         }
-        documentRepository.save(document);
 
+        // Enregistrer le document dans la base de données
+        documentRepository.save(document);
         return "Document ajouté avec succès";
     }
+
 
     @Override
     public List<DocumentDto> getDocuments() {

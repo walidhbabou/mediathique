@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface LecteurService {
     List<Lecteur> getAllLecteurs();
+    Lecteur getLecteurById(Long id); // Nouvelle méthode
+
 }

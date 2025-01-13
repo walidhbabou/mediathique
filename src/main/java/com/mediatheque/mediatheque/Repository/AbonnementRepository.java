@@ -2,7 +2,9 @@ package com.mediatheque.mediatheque.Repository;
 
 import com.mediatheque.mediatheque.Entity.Abonnement;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -13,5 +15,8 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface AbonnementRepository extends JpaRepository<Abonnement, Long> {
     List<Abonnement> findByDateexpirationBefore(Date dateexpiration);
-    Optional<Abonnement> findByLecteurLecteurId(Long lecteurId);
+    List<Abonnement> findAllByLecteurLecteurId(Long lecteur_id);
+
+
+
 }

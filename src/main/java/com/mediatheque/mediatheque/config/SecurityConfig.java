@@ -61,6 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/emprunts/**").permitAll()
                         .requestMatchers("/Mediatheque/lecteur/**").permitAll()
                         .requestMatchers("/consult/**").permitAll()
+                        .requestMatchers("/api/requests/**").permitAll()
                         .requestMatchers("/dashboard-admin/**").hasRole("ADMIN")
                         .requestMatchers("/dashboard-lecteur/**").hasRole("LECTEUR")
                         .requestMatchers("/dashboard-employe/**").hasRole("EMPLOYEE")

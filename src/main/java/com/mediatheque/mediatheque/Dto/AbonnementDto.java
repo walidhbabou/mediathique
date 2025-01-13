@@ -16,7 +16,7 @@ public class AbonnementDto {
     private Date dateexpiration;
     private Long solde;
 
-    private Long lecteurId;
+    private Long lecteur_id;
     private String lecteurName;
     private String  lecteurlastName;
 

@@ -5,6 +5,7 @@ import com.mediatheque.mediatheque.Entity.Lecteur;
 import com.mediatheque.mediatheque.Service.Utilisateur.LecteurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,5 +29,11 @@ public class LecteurController {
         return lecteurs.stream()
                 .map(lecteur -> new LecteurDto(lecteur.getLecteurId(),lecteur.getUser()))
                 .collect(Collectors.toList());
+    }
+    // Ajouter un point d'accès pour récupérer un lecteur par ID
+    @GetMapping("/lecteur/{id}")
+    public LecteurDto getLecteurById(@PathVariable Long id) {
+        Lecteur lecteur = lecteurService.getLecteurById(id);
+        return new LecteurDto(lecteur.getLecteurId(), lecteur.getUser());
     }
 }

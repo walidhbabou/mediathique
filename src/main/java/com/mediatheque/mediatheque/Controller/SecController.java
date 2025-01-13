@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
-
 public class SecController {
     private AuthenticationManager authenticationManager;
     private JwtEncoder jwtEncoder;
@@ -29,18 +28,13 @@ public class SecController {
 
 @PostMapping("/login")
 public Map<String, String> login(@RequestBody UserLoginRequest userLoginRequest) {
-    // Authentifie l'utilisateur
     Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(userLoginRequest.email(), userLoginRequest.password())
     );
-
-    // Récupère le rôle de l'utilisateur
     String role = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .findFirst()
             .orElse("USER");
-
-    // Génère un token JWT
     Instant instant = Instant.now();
     JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
             .issuedAt(instant)

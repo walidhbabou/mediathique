@@ -52,12 +52,14 @@ public class AbonnementController {
         return abonnementService.findAbonnementsExpiringBefore(date_expiration);
     }
     @GetMapping("/lecteur/{lecteurId}")
-    public ResponseEntity<AbonnementDto> getAbonnementByLecteurId(@PathVariable Long lecteurId) {
+    public ResponseEntity<List<AbonnementDto>> getAbonnementsByLecteurId(@PathVariable Long lecteurId) {
         try {
-            AbonnementDto abonnement = abonnementService.getAbonnementByLecteurId(lecteurId);
-            return new ResponseEntity<>(abonnement, HttpStatus.OK);
+            List<AbonnementDto> abonnements = abonnementService.getAbonnementsByLecteurId(lecteurId);
+            return new ResponseEntity<>(abonnements, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
+    }   
+
+
 }

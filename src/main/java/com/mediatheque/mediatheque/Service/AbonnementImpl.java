@@ -24,13 +24,13 @@ public class AbonnementImpl implements AbonnementService {
     @Override
     public AbonnementDto createAbonnement(AbonnementDto abonnementDto) {
         // Validate that lecteurId is not null
-        if (abonnementDto.getLecteurId() == null) {
+        if (abonnementDto.getLecteur_id() == null) {
             throw new IllegalArgumentException("Lecteur ID must not be null");
         }
 
         // Retrieve the lecteur by ID
-        Lecteur lecteur = lecteurRepository.findById(abonnementDto.getLecteurId())
-                .orElseThrow(() -> new RuntimeException("Lecteur not found with id: " + abonnementDto.getLecteurId()));
+        Lecteur lecteur = lecteurRepository.findById(abonnementDto.getLecteur_id())
+                .orElseThrow(() -> new RuntimeException("Lecteur not found with id: " + abonnementDto.getLecteur_id()));
 
         // Map the DTO to the entity
         Abonnement abonnement = new Abonnement();
@@ -48,7 +48,7 @@ public class AbonnementImpl implements AbonnementService {
         savedAbonnementDto.setDateexpiration(savedAbonnement.getDateexpiration());
         savedAbonnementDto.setDateinscription(savedAbonnement.getDateinscription());
         savedAbonnementDto.setSolde(savedAbonnement.getSolde());
-        savedAbonnementDto.setLecteurId(savedAbonnement.getLecteur().getLecteurId());
+        savedAbonnementDto.setLecteur_id(savedAbonnement.getLecteur().getLecteurId());
 
         return savedAbonnementDto;
     }
@@ -94,19 +94,25 @@ public class AbonnementImpl implements AbonnementService {
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
-    @Override
-    public AbonnementDto getAbonnementByLecteurId(Long lecteurId) {
-        Abonnement abonnement = abonnementRepository.findByLecteurLecteurId(lecteurId)
-                .orElseThrow(() -> new RuntimeException("Abonnement not found for lecteur with id: " + lecteurId));
-        return mapToDto(abonnement);
+
+
+    public List<AbonnementDto> getAbonnementsByLecteurId(Long lecteur_id) {
+        List<Abonnement> abonnements = abonnementRepository.findAllByLecteurLecteurId(lecteur_id);
+        if (abonnements.isEmpty()) {
+            throw new RuntimeException("No abonnements found for lecteur with id: " + lecteur_id);
+        }
+        return abonnements.stream()
+                .map(this::mapToDto)
+                .toList();
     }
+
     private AbonnementDto mapToDto(Abonnement abonnement) {
         return AbonnementDto.builder()
                 .abonnementId(abonnement.getAbonnementId())
                 .dateinscription(abonnement.getDateinscription())
                 .dateexpiration(abonnement.getDateexpiration())
                 .solde(abonnement.getSolde())
-                .lecteurId(abonnement.getLecteur().getLecteurId())
+                .lecteur_id(abonnement.getLecteur().getLecteurId())
                 .lecteurName(abonnement.getLecteur().getUser().getUsername())
                 .lecteurlastName(abonnement.getLecteur().getUser().getLastname())
                 .build();

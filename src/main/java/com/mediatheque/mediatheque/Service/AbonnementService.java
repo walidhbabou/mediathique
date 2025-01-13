@@ -13,6 +13,6 @@ public interface AbonnementService {
     AbonnementDto getAbonnementById(Long id);
     List<AbonnementDto> getAllAbonnements();
     List<AbonnementDto> findAbonnementsExpiringBefore(Date date_expiration);
-    AbonnementDto getAbonnementByLecteurId(Long lecteurId);
+    List<AbonnementDto> getAbonnementsByLecteurId(Long lecteur_id);
 
 }
