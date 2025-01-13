@@ -82,7 +82,10 @@ public class RequestEmpruntImpl implements RequestEmpruntService {
         dto.setDateRequest(requestEmprunt.getDateRequest());
         dto.setStatus(requestEmprunt.getStatus());
         dto.setLecteurId(requestEmprunt.getLecteur().getLecteurId());
+        dto.setLecteurNom(requestEmprunt.getLecteur().getUser().getUsername());
+        dto.setLecteurPrenom(requestEmprunt.getLecteur().getUser().getLastname());
         dto.setDocumentId(requestEmprunt.getDocument().getDocument_id());
+        dto.setDocumentTitre(requestEmprunt.getDocument().getTitre());
         return dto;
     }
 }

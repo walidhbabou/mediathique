@@ -14,5 +14,8 @@ public class RequestEmpruntDto {
     private Date dateRequest;
     private Status status;
     private Long lecteurId;
+    private String lecteurNom;
+    private String lecteurPrenom;
     private Long documentId;
+    private String documentTitre;
 }
