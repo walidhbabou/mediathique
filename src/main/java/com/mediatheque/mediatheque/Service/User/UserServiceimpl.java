@@ -38,6 +38,12 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return userRepo.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with EMAIL: " + email));
+    }
+
+    @Override
     public User getUserByUsername(String username) {
         return userRepo.findByUsername(username);
     }

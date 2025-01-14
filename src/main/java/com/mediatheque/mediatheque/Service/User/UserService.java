@@ -8,5 +8,6 @@ import java.util.UUID;
 public interface UserService {
     public User addUser(String email, String lastename, String password, Role role, String username);
     public User getUserById(Long id);
+    public User getUserByEmail(String email);
     public User getUserByUsername(String username);
 }

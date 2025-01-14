@@ -7,13 +7,18 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @Repository
 @EnableJpaRepositories
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.username = :username")
     User findByUsername(@Param("username") String username);
+
     @Query("SELECT u FROM User u WHERE u.email = :email")
-    User findByEmail(@Param("email") String email, String identifier);
+    Optional<User> findByEmail(@Param("email") String email);
+
     @Query("SELECT u FROM User u WHERE u.email = :email OR u.username = :username")
     User findByEmailOrUsername(@Param("email") String email, @Param("username") String username);
 }
