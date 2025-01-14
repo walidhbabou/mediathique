@@ -70,24 +70,44 @@ public class DocumentImp implements DocumentService {
     }
 
     @Override
-    public String updateDocument(DocumentDto documentDTO) {
-        Optional<Document> optionalDocument = documentRepository.findById(documentDTO.getDocument_id());
-        if (optionalDocument.isPresent()) {
-            Document document = optionalDocument.get();
-            document.setTitre(documentDTO.getTitre());
-            document.setType(documentDTO.getType());
-            document.setPrix(documentDTO.getPrix());
-            document.setConsultable(documentDTO.getConsultable());
-            document.setQuantite(documentDTO.getQuantite());
-            document.setQuantite_disponible(documentDTO.getQuantite_disponible());
-            documentRepository.save(document);
-            return "Document mis à jour avec succès";
-        } else {
+    public String updateDocument(DocumentRequest documentDto) {
+        // Fetch the existing document from the database
+        Optional<Document> optionalDocument = documentRepository.findById(documentDto.getDocument().getDocument_id());
+        if (!optionalDocument.isPresent()) {
             return "Document non trouvé";
         }
+
+        Document document = optionalDocument.get();
+
+        // Update the document fields
+        document.setTitre(documentDto.getDocument().getTitre());
+        document.setType(documentDto.getDocument().getType());
+        document.setConsultable(documentDto.getDocument().getConsultable());
+        document.setPrix(documentDto.getDocument().getPrix());
+        document.setQuantite(documentDto.getDocument().getQuantite());
+        document.setQuantite_disponible(documentDto.getDocument().getQuantite_disponible());
+
+        // If the document type is "LIVRE", update the associated LivreDto
+        if (document.getType().equals("LIVRE")) {
+            Optional<LivreDto> optionalLivre = Optional.ofNullable(livreService.getLivreById(document.getDocument_id()));
+            if (optionalLivre.isPresent()) {
+                LivreDto livre = optionalLivre.get();
+                livre.setAuteur(documentDto.getLivre().getAuteur());
+                livreService.updateLivre(livre);
+            } else {
+                // If no LivreDto exists, create a new one
+                LivreDto livre = new LivreDto();
+                livre.setDocument(document);
+                livre.setAuteur(documentDto.getLivre().getAuteur());
+                livreService.addLivre(livre);
+            }
+        }
+
+        // Save the updated document
+        documentRepository.save(document);
+
+        return "Document mis à jour avec succès";
     }
-
-
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public String deleteDocument(Long id) {

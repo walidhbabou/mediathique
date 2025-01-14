@@ -11,7 +11,7 @@ import java.util.List;
 public interface DocumentService  {
     String addDocument(DocumentRequest documentDto);
     List<DocumentDto> getDocuments();
-    String updateDocument(DocumentDto document);
+    String updateDocument(DocumentRequest documentDto);
     String deleteDocument(Long id);
     DocumentDto getDocumentById(Long id); // Nouvelle méthode
 
