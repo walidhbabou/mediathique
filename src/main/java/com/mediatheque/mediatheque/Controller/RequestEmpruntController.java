@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/requests")
@@ -33,10 +34,10 @@ public class RequestEmpruntController {
     @PutMapping("/update/{id}")
     public ResponseEntity<RequestEmpruntDto> updateRequestStatus(
             @PathVariable Long id,
-            @RequestParam String status) {
+            @RequestBody Map<String, String> requestBody) {
+        String status = requestBody.get("status");
         return ResponseEntity.ok(requestEmpruntService.updateRequestStatus(id, status));
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRequest(@PathVariable Long id) {
         requestEmpruntService.deleteRequest(id);
