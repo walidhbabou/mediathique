@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/Mediatheque/CdRom/**").permitAll()
                         .requestMatchers("/api/emprunts/**").permitAll()
                         .requestMatchers("/Mediatheque/lecteur/**").permitAll()
+                        .requestMatchers("/Mediatheque/equipe-benevol/**").permitAll()
                         .requestMatchers("/consult/**").permitAll()
                         .requestMatchers("/api/requests/**").permitAll()
                         .requestMatchers("/dashboard-admin/**").hasRole("ADMIN")
