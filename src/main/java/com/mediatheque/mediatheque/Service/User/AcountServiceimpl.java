@@ -60,13 +60,27 @@ public class AcountServiceimpl implements AcountService {
             default:
                 System.out.println("Invalid role: " + role);
                 throw new IllegalArgumentException("Invalid role");
-    }
+        }
         User savedUser = userRepo.save(newUser);
         System.out.println("User saved to database: " + savedUser);
 
         return savedUser;
-}
+    }
+
     @Override
     public User findUserByUsername(String username) {
-        return userRepo.findByUsername(username);
-    }}
+        User user = userRepo.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User with username '" + username + "' not found");
+        }
+        return user;
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User with email '" + email + "' not found"));
+    }
+
+
+}

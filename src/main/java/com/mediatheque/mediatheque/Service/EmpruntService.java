@@ -11,4 +11,6 @@ public interface EmpruntService {
     Optional<EmpruntDto> getEmpruntById(Long id);
     EmpruntDto updateEmprunt(Long id, EmpruntDto empruntDto);
     void deleteEmprunt(Long id);
+    List<EmpruntDto> getEmpruntsByUser(Long userId);
+    public List<EmpruntDto> getEmpruntsExpires();
 }

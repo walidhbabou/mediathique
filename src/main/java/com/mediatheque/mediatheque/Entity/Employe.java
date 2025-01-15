@@ -1,5 +1,6 @@
 package com.mediatheque.mediatheque.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
@@ -20,6 +21,8 @@ public class Employe {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonManagedReference // Côté maître
+
     private User user;
 }
 

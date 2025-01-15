@@ -59,7 +59,12 @@ public class AbonnementController {
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }   
+    }
+    @GetMapping("/count")
+    public ResponseEntity<Long> countAbonnements() {
+        Long count = abonnementService.countAbonnements();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 
 
 }

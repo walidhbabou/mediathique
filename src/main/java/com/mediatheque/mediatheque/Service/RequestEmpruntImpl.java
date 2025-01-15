@@ -25,11 +25,13 @@ public class RequestEmpruntImpl implements RequestEmpruntService {
 
     @Override
     public RequestEmpruntDto createRequest(RequestEmpruntDto requestEmpruntDto) {
-        // Vérifier si le lecteur et le document existent
+        // Vérifier si le lecteur existe
         Lecteur lecteur = lecteurRepository.findById(requestEmpruntDto.getLecteurId())
-                .orElseThrow(() -> new RuntimeException("Lecteur not found"));
+                .orElseThrow(() -> new RuntimeException("Lecteur introuvable"));
+
+        // Vérifier si le document existe
         Document document = documentRepository.findById(requestEmpruntDto.getDocumentId())
-                .orElseThrow(() -> new RuntimeException("Document not found"));
+                .orElseThrow(() -> new RuntimeException("Document introuvable"));
 
         // Créer une nouvelle demande d'emprunt
         RequestEmprunt requestEmprunt = new RequestEmprunt();

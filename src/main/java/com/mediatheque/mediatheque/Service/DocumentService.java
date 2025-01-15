@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.Map;
 
 public interface DocumentService  {
     String addDocument(DocumentRequest documentDto);
@@ -14,6 +15,6 @@ public interface DocumentService  {
     String updateDocument(DocumentRequest documentDto);
     String deleteDocument(Long id);
     DocumentDto getDocumentById(Long id); // Nouvelle méthode
-
+    Map<String, Integer> getDocumentsGroupedByType();
 
 }

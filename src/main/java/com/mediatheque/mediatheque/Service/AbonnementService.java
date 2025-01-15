@@ -14,5 +14,5 @@ public interface AbonnementService {
     List<AbonnementDto> getAllAbonnements();
     List<AbonnementDto> findAbonnementsExpiringBefore(Date date_expiration);
     List<AbonnementDto> getAbonnementsByLecteurId(Long lecteur_id);
-
+    public  Long countAbonnements();
 }

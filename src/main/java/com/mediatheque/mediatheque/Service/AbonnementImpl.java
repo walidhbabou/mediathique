@@ -117,4 +117,8 @@ public class AbonnementImpl implements AbonnementService {
                 .lecteurlastName(abonnement.getLecteur().getUser().getLastname())
                 .build();
     }
+    public Long countAbonnements() {
+        return abonnementRepository.count();
+    }
+
 }

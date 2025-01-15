@@ -39,4 +39,11 @@ public class Emprunt {
 
     private Document document;
 
+    public boolean isRetourExpire() {
+        if (date_retour == null) {
+            return false;
+        }
+        return date_retour.before(new Date());
+    }
+
 }

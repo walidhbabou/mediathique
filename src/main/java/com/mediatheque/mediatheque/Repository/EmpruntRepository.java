@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @EnableJpaRepositories
 public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
@@ -15,7 +17,8 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
     @Query("DELETE FROM Emprunt e WHERE e.document.document_id = :documentId")
 
     void deleteByDocumentId(@Param("documentId") Long documentId);
-
+    @Query("SELECT e FROM Emprunt e WHERE e.abonnement.lecteur.lecteurId = :userId")
+    List<Emprunt> findByAbonnement_User_Id(Long userId);
 
 
 }

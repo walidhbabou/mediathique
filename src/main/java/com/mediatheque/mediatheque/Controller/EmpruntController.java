@@ -42,4 +42,15 @@ public class EmpruntController {
         empruntService.deleteEmprunt(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/byUser/{userId}")
+    public ResponseEntity<List<EmpruntDto>> getEmpruntsByUser(@PathVariable Long userId) {
+        List<EmpruntDto> emprunts = empruntService.getEmpruntsByUser(userId);
+        return ResponseEntity.ok(emprunts);
+    }
+    @GetMapping("/expires")
+    public ResponseEntity<List<EmpruntDto>> getEmpruntsExpires() {
+        List<EmpruntDto> empruntsExpires = empruntService.getEmpruntsExpires();
+        return ResponseEntity.ok(empruntsExpires);
+    }
+
 }

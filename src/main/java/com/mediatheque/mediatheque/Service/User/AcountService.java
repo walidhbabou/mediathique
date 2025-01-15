@@ -9,5 +9,5 @@ public interface AcountService {
     User addNewUser(String email, String lastename, String password, Role role,  String username);
 
     User findUserByUsername(String username);
-
+   User findUserByEmail(String email);
 }

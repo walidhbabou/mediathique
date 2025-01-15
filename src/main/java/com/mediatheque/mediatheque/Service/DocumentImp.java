@@ -6,6 +6,7 @@ import com.mediatheque.mediatheque.Dto.LivreDto;
 import com.mediatheque.mediatheque.Entity.Document;
 
 import com.mediatheque.mediatheque.Entity.Livre;
+import com.mediatheque.mediatheque.Exception.ResourceNotFoundException;
 import com.mediatheque.mediatheque.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -71,8 +73,7 @@ public class DocumentImp implements DocumentService {
 
     @Override
     public String updateDocument(DocumentRequest documentDto) {
-        // Fetch the existing document from the database
-        Optional<Document> optionalDocument = documentRepository.findById(documentDto.getDocument().getDocument_id());
+               Optional<Document> optionalDocument = documentRepository.findById(documentDto.getDocument().getDocument_id());
         if (!optionalDocument.isPresent()) {
             return "Document non trouvé";
         }
@@ -108,6 +109,26 @@ public class DocumentImp implements DocumentService {
 
         return "Document mis à jour avec succès";
     }
+    public Map<String, Integer> getDocumentsGroupedByType() {
+        List<Document> documents = documentRepository.findAll();
+
+        return documents.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.groupingBy(
+                        DocumentDto::getType,
+                        Collectors.summingInt(DocumentDto::getQuantite_disponible)
+                ));
+    }
+
+    // Méthode pour convertir Document en DocumentDto
+    private DocumentDto convertToDto(Document document) {
+        DocumentDto dto = new DocumentDto();
+        dto.setType(document.getType());
+        dto.setQuantite_disponible(document.getQuantite_disponible());
+        // Copiez les autres champs nécessaires
+        return dto;
+    }
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public String deleteDocument(Long id) {
@@ -123,21 +144,8 @@ public class DocumentImp implements DocumentService {
     }
     @Override
     public DocumentDto getDocumentById(Long id) {
-        Optional<Document> optionalDocument = documentRepository.findById(id);
-        if (optionalDocument.isPresent()) {
-            Document document = optionalDocument.get();
-            DocumentDto dto = new DocumentDto();
-            dto.setDocument_id(document.getDocument_id());
-            dto.setTitre(document.getTitre());
-            dto.setType(document.getType());
-            dto.setConsultable(document.getConsultable());
-            dto.setPrix(document.getPrix());
-
-            dto.setQuantite(document.getQuantite());
-            dto.setQuantite_disponible(document.getQuantite_disponible());
-            return dto;
-        } else {
-            throw new RuntimeException("Document non trouvé avec l'ID : " + id);
-        }
+        Document document = documentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Document introuvable avec l'id : " + id));
+        return convertToDto(document);
     }
 }

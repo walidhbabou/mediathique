@@ -4,10 +4,9 @@ import com.mediatheque.mediatheque.Dto.LecteurDto;
 import com.mediatheque.mediatheque.Entity.Lecteur;
 import com.mediatheque.mediatheque.Service.Utilisateur.LecteurService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +21,11 @@ public class LecteurController {
     public LecteurController(LecteurService lecteurService) {
         this.lecteurService = lecteurService;
     }
+    @GetMapping("/count")
+    public ResponseEntity<Long> countLecteurs() {
+        Long count = lecteurService.countLecteurs();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 
     @GetMapping("/allLecteurs")
     public List<LecteurDto> getAllLecteurs() {
@@ -35,5 +39,27 @@ public class LecteurController {
     public LecteurDto getLecteurById(@PathVariable Long id) {
         Lecteur lecteur = lecteurService.getLecteurById(id);
         return new LecteurDto(lecteur.getLecteurId(), lecteur.getUser());
+    }
+    // Nouvel endpoint pour récupérer un lecteur par l'ID de l'utilisateur
+    @GetMapping("/byUserId/{userId}")
+    public LecteurDto getLecteurByUserId(@PathVariable Long userId) {
+        Lecteur lecteur = lecteurService.getLecteurByUserId(userId);
+        return new LecteurDto(lecteur.getLecteurId(), lecteur.getUser());
+    }
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<LecteurDto> updateLecteur(@PathVariable Long userId, @RequestBody LecteurDto lecteurDto) {
+        Lecteur updatedLecteur = lecteurService.updateLecteur(userId, lecteurDto);
+        return ResponseEntity.ok(new LecteurDto(updatedLecteur.getLecteurId(), updatedLecteur.getUser()));
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteLecteur(@PathVariable Long id) {
+        try {
+            lecteurService.deleteLecteur(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erreur lors de la suppression du lecteur");
+        }
     }
 }

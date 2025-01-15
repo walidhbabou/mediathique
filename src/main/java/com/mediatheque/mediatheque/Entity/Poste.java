@@ -10,7 +10,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.Date;
 
 
-@NamedQuery(name = "Poste.GetPosteLibre",query = "select P from Poste P where P.etat=true ")
 
 @Data
 @Entity

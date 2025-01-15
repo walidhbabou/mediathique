@@ -26,6 +26,8 @@ public class EmpruntImpl implements EmpruntService{
 
     @Autowired
     private DocumentRepository documentRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public EmpruntDto createEmprunt(EmpruntDto empruntDto) {
@@ -39,9 +41,17 @@ public class EmpruntImpl implements EmpruntService{
             throw new IllegalArgumentException("Document ID must not be null");
         }
 
-        // Rechercher l'abonnement et le document
+        // Rechercher l'abonnement
         Abonnement abonnement = abonnementRepository.findById(empruntDto.getAbonnement().getAbonnementId())
                 .orElseThrow(() -> new IllegalArgumentException("Abonnement not found"));
+
+        // Vérifier si le lecteur a déjà 5 emprunts
+        long existingEmpruntsCount = empruntRepository.findByAbonnement_User_Id(abonnement.getLecteur().getLecteurId()).size();
+        if (existingEmpruntsCount >= 5) {
+            throw new IllegalArgumentException("Vous avez déjà atteint la limite de 5 emprunts.");
+        }
+
+        // Rechercher le document
         Document document = documentRepository.findById(empruntDto.getDocument().getDocument_id())
                 .orElseThrow(() -> new IllegalArgumentException("Document not found"));
 
@@ -58,6 +68,7 @@ public class EmpruntImpl implements EmpruntService{
         // Convertir l'entité en DTO
         return convertEntityToDto(emprunt);
     }
+
 
     @Override
     public List<EmpruntDto> getAllEmprunts() {
@@ -158,4 +169,25 @@ public class EmpruntImpl implements EmpruntService{
 
         return emprunt;
     }
+    @Override
+    public List<EmpruntDto> getEmpruntsByUser(Long userId) {
+        return empruntRepository.findByAbonnement_User_Id(userId)
+                .stream()
+                .limit(5) // Limite les résultats à 5
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+    }
+    public List<EmpruntDto> getEmpruntsExpires() {
+        List<Emprunt> emprunts = empruntRepository.findAll();
+        List<EmpruntDto> empruntsExpires = emprunts.stream()
+                .filter(Emprunt::isRetourExpire)
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+
+        // Envoyer une notification pour chaque emprunt expiré
+        empruntsExpires.forEach(notificationService::sendNotification);
+
+        return empruntsExpires;
+    }
+
 }

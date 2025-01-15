@@ -1,6 +1,7 @@
 package com.mediatheque.mediatheque.Controller;
 import com.mediatheque.mediatheque.Dto.User.UserLoginRequest;
 import com.mediatheque.mediatheque.Dto.User.UserRegisterRequest;
+import com.mediatheque.mediatheque.Dto.User.UserResponse;
 import com.mediatheque.mediatheque.Entity.User;
 import com.mediatheque.mediatheque.Service.User.AcountServiceimpl;
 import com.mediatheque.mediatheque.Service.User.UserServiceimpl;
@@ -26,34 +27,40 @@ public class SecController {
     private AcountServiceimpl userService;
     private PasswordEncoder passwordEncoder;
 
-@PostMapping("/login")
-public Map<String, String> login(@RequestBody UserLoginRequest userLoginRequest) {
-    Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(userLoginRequest.email(), userLoginRequest.password())
-    );
-    String role = authentication.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .findFirst()
-            .orElse("USER");
-    Instant instant = Instant.now();
-    JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-            .issuedAt(instant)
-            .expiresAt(instant.plus(10, ChronoUnit.MINUTES)) // Token valide pendant 10 minutes
-            .subject(userLoginRequest.email())
-            .claim("scope", role)
-            .build();
-    System.out.println(role);
+    @PostMapping("/login")
+    public Map<String, String> login(@RequestBody UserLoginRequest userLoginRequest) {
+        // Authentification de l'utilisateur
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userLoginRequest.email(), userLoginRequest.password())
+        );
 
-    JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(
-            JwsHeader.with(MacAlgorithm.HS256).build(),
-            jwtClaimsSet
-    );
-    System.out.println("Email: " + userLoginRequest.email());
-    System.out.println("Password: " + userLoginRequest.password());
-    System.out.println("Role: " + role);
-    String jwt = jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
-    return Map.of("accessToken", jwt, "role", role);
-}
+        // Récupération de l'utilisateur connecté
+        User user = userService.findUserByEmail(userLoginRequest.email());
+
+        // Création du JWT
+        Instant instant = Instant.now();
+        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+                .issuedAt(instant)
+                .expiresAt(instant.plus(10, ChronoUnit.MINUTES)) // Token valide pendant 10 minutes
+                .subject(user.getEmail())
+                .claim("scope", user.getRole().name())
+                .claim("id", user.getId()) // Ajout de l'ID de l'utilisateur
+                .build();
+
+        JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(
+                JwsHeader.with(MacAlgorithm.HS256).build(),
+                jwtClaimsSet
+        );
+
+        String jwt = jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+
+        // Retour de la réponse
+        return Map.of(
+                "accessToken", jwt,
+                "role", user.getRole().name(),
+                "id", user.getId().toString()
+        );
+    }
     @PostMapping("/signup")
     public Map<String, String> signup(@RequestBody UserRegisterRequest userRegisterRequest) {
         try {
@@ -98,5 +105,17 @@ public Map<String, String> login(@RequestBody UserLoginRequest userLoginRequest)
             e.printStackTrace();
         }
         return Map.of("accessToken", null);
+    }
+    @GetMapping("/{email}")
+    public UserResponse getUserByEmail(@PathVariable String email) {
+        User user = userService.findUserByUsername(email);
+
+        return UserResponse.builder()
+                .id(user.getId()) // Assurez-vous que l'entité User contient bien le champ id
+                .username(user.getUsername())
+                .lastname(user.getLastname())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
     }
 }
